@@ -141,7 +141,7 @@ function render(){
       <div class="budget-top">
         <span class="dot" style="background:${c.color}"></span>
         <span class="name">${c.name}</span>
-        <input type="number" min="0" max="100" value="${c.pct}" data-pct="${c.id}" title="%" /> <small>%</small>
+        <input type="text" inputmode="decimal" value="${c.pct}" data-pct="${c.id}" title="%" /> <small>%</small>
         <button class="icon-btn" data-del="${c.id}" title="Excluir"><i data-lucide="trash-2"></i></button>
       </div>
       <input type="range" min="0" max="100" value="${c.pct}" data-range="${c.id}" />
@@ -151,7 +151,7 @@ function render(){
   }).join("");
 
   document.querySelectorAll("[data-pct]").forEach(i=>i.onchange=e=>{
-    const c=state.categories.find(x=>x.id===e.target.dataset.pct); c.pct=Math.max(0,+e.target.value||0); save(); render();
+    const c=state.categories.find(x=>x.id===e.target.dataset.pct); c.pct=Math.max(0,parseNum(e.target.value)); save(); render();
   });
   document.querySelectorAll("[data-range]").forEach(i=>i.oninput=e=>{
     const c=state.categories.find(x=>x.id===e.target.dataset.range); c.pct=+e.target.value; save(); render();
