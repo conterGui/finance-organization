@@ -14,6 +14,13 @@ if(!state.categories?.length) state.categories = DEFAULT_CATS;
 const $ = id => document.getElementById(id);
 const EUR = v => (v||0).toLocaleString("pt-PT",{style:"currency",currency:"EUR"});
 const uid = () => Math.random().toString(36).slice(2,9);
+function parseNum(v){
+  let s = String(v ?? "").trim();
+  if(!s) return 0;
+  if(s.includes(",")) s = s.replace(/\./g,"").replace(",",".");
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
 
 function load(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch{ return null; } }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
@@ -24,7 +31,7 @@ let donut=null, bar=null, editingId=null;
 $("incomeInput").value = state.income || "";
 $("fDate").valueAsDate = new Date();
 
-$("incomeInput").addEventListener("input", e=>{ state.income = parseFloat(e.target.value)||0; save(); render(); });
+$("incomeInput").addEventListener("input", e=>{ state.income = parseNum(e.target.value); save(); render(); });
 $("resetBtn").onclick = ()=>{ if(confirm("Apagar tudo?")){ state={income:0,categories:DEFAULT_CATS,txs:[]}; save(); location.reload(); } };
 $("exportBtn").onclick = ()=>{
   const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
@@ -40,7 +47,7 @@ $("addCatBtn").onclick = ()=>$("catModal").classList.remove("hidden");
 $("cCancel").onclick = ()=>$("catModal").classList.add("hidden");
 $("cSave").onclick = ()=>{
   const name=$("cName").value.trim(); if(!name) return alert("Dê um nome.");
-  state.categories.push({id:uid(),name,color:$("cColor").value,pct:parseFloat($("cPct").value)||0});
+  state.categories.push({id:uid(),name,color:$("cColor").value,pct:parseNum($("cPct").value)});
   $("cName").value=""; save(); render(); $("catModal").classList.add("hidden");
 };
 $("searchInput").addEventListener("input", renderTx);
@@ -60,7 +67,7 @@ function fillCatSelect(sel, val){
 }
 function saveTx(){
   const desc=$("fDesc").value.trim()||"Sem descrição";
-  const value=parseFloat($("fValue").value);
+  const value=parseNum($("fValue").value);
   if(!value||value<=0) return alert("Informe um valor válido.");
   const data={id:editingId||uid(),desc,value,catId:$("fCat").value,type:$("fType").value,date:$("fDate").value||new Date().toISOString().slice(0,10)};
   if(editingId){ state.txs = state.txs.map(t=>t.id===editingId?data:t); }
