@@ -109,7 +109,7 @@ select option{background:#141417;color:#f5f5f7}
 .drawer-head h2{margin:0;font-size:16px}
 .drawer-actions{display:flex;gap:8px;margin-top:14px}
 .drawer-actions .btn{flex:1}
-.side-col{position:fixed;top:0;right:0;bottom:0;width:min(360px,88vw);background:#000;z-index:40;padding:18px 16px calc(20px + env(safe-area-inset-bottom));overflow-y:auto;transform:translateX(105%);transition:transform .28s ease}
+.side-col{position:fixed;top:0;right:0;bottom:0;width:min(360px,88vw);background:#000;z-index:40;padding:calc(18px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));overflow-y:auto;transform:translateX(105%);transition:transform .28s ease}
 body.drawer-open .side-col{transform:none}
 body.drawer-open{overflow:hidden}
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:35;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -129,7 +129,7 @@ body.drawer-open .drawer-overlay{opacity:1;pointer-events:auto}
 
 /* Telas pequenas */
 @media(max-width:640px){
-  .top{padding:14px 12px}
+  .top{padding:calc(14px + env(safe-area-inset-top)) 12px 14px}
   .logo{width:40px;height:40px;font-size:19px}
   .brand h1{font-size:17px}
   .layout{padding:2px 12px 110px}
